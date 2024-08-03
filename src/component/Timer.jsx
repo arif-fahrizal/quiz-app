@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 export const Timer = ({ onTimeUp }) => {
     const dataTime = localStorage.getItem('timer')
     const [time, setTime] = useState({
-        minutes: dataTime ? JSON.parse(dataTime).minutes : 0,
-        seconds: dataTime ? JSON.parse(dataTime).seconds : 10
+        minutes: dataTime ? JSON.parse(dataTime).minutes : 15,
+        seconds: dataTime ? JSON.parse(dataTime).seconds : 0
     })
     const { minutes, seconds } = time
 

@@ -17,9 +17,9 @@ export const LoginPage = () => {
             password: 'admin123'
         },
         {
-            name: 'Jhon Doe',
-            username: 'jhondoe',
-            password: 'jhondoe123'
+            name: 'Arif Fahrizal',
+            username: 'fahrizal',
+            password: 'fahrizal123'
         },
     ]
 

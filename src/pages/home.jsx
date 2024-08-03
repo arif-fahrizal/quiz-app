@@ -8,7 +8,7 @@ import { Quiz } from './quiz'
 export const Home = () => {
     const [name, setName] = useState(localStorage.getItem('name') && JSON.parse(localStorage.getItem('name')) || '')
     const [startQuiz, setStartQuiz] = useState(false)
-    
+
     const navigate = useNavigate()
 
     const handleQuiz = (e) => {
