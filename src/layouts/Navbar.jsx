@@ -25,13 +25,13 @@ const Navbar = () => {
     <div className='relative flex justify-between w-72 h-14 mx-auto mt-3 rounded-full bg-[#112A4E] shadow'>
       <ul className='flex items-center gap-10 px-5 text-white'>
         <li className='hover:text-slate-400 transition-all'>
-          <Link to='/'><HomeIcon className='w-8 h-8'/></Link>
+          <Link to='/trivia-app/'><HomeIcon className='w-8 h-8'/></Link>
         </li>
         <li className='hover:text-slate-400 transition-all'>
-          <Link to='/score'><ChartBarIcon className='w-8 h-8'/></Link>
+          <Link to='/trivia-app/score'><ChartBarIcon className='w-8 h-8'/></Link>
         </li>
         <li className='hover:text-slate-400 transition-all'>
-          <Link to='/contact'><PhoneIcon className='w-8 h-8'/></Link>
+          <Link to='/trivia-app/contact'><PhoneIcon className='w-8 h-8'/></Link>
         </li>
         <li className='w-[32px] h-[32px]'>
           <Menu >

@@ -59,7 +59,7 @@ export const LoginPage = () => {
     <div className='flex justify-center items-center w-full h-screen bg-[#1d3557]'>
       <div className='w-full h-screen bg-white overflow-hidden sm:w-[450px] sm:h-[650px] sm:rounded-2xl lg:flex lg:w-[900px] xl:w-[1150px]'>
         <div className='w-full h-60 flex flex-col items-center justify-center text-white bg-[#00b4d8] rounded-b-[30%] lg:h-full lg:rounded-none'>
-          <img src="/logo.svg" alt="logo" className='w-40 h-40 lg:w-60 lg:h-60 xl:w-80 xl:h-80 object-contain'/>
+          <img src="./logo.svg" alt="logo" className='w-40 h-40 lg:w-60 lg:h-60 xl:w-80 xl:h-80 object-contain'/>
           <h1 className='text-2xl lg:text-3xl font-semibold'>Trivia App Mastery</h1>
           <p className='hidden lg:block px-10 text-center'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt debitis quisquam illo! Laboriosam quaerat voluptas, repellat animi consectetur vel ipsum.</p>
         </div>

@@ -50,8 +50,8 @@ export const Quiz = () => {
               <li key={index} onClick={() => handleAnswer(option)} className='flex justify-center items-center w-full sm:w-60 lg:w-64 xl:w-80 py-3 text-sm font-medium text-white rounded-lg bg-[#112A4E] cursor-pointer hover:bg-[#0d213e]'>{option}</li>
             ))}
           </ul>
-          <section className='flex justify-center items-center gap-5 left-1/2 w-52 py-1.5 mx-auto mt-32 sm:mt-72 text-white rounded-full bg-[#112A4E]'>
-            <img src="/time.svg" alt="" className='w-10 h10' />
+          <section className='flex justify-center items-center gap-5 left-1/2 w-52 py-1.5 mx-auto mt-16 sm:mt-60 text-white rounded-full bg-[#112A4E]'>
+            <img src="./time.svg" alt="" className='w-10 h10' />
             <Timer />
           </section>
         </section>}

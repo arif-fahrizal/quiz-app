@@ -36,7 +36,7 @@ export const Home = () => {
           <Button onClick={handleQuiz}>Start Quiz</Button>
         </section>
         <div className='w-full bg-blue-00'>
-          <img src="/sun-logo.svg" alt="" className='w-40 h-40 mx-auto mb-5 object-contain sm:w-52 sm:h-5w-52 lg:w-60 lg:h-60' />
+          <img src="./sun-logo.svg" alt="" className='w-40 h-40 mx-auto mb-5 object-contain sm:w-52 sm:h-5w-52 lg:w-60 lg:h-60' />
           <h1 className='text-center text-3xl font-bold sm:text-4xl'><span className='text-[#00b4d8]'>{`Oxlade`}</span> Trivia App</h1>
         </div>
       </div>
