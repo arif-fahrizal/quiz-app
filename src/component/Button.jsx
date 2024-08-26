@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 export const Button = ({ onClick = () => {}, children }) => {
   return (
-    <button onClick={onClick} className='bg-custom-radial text-base text-white font-bold py-2 px-4 rounded-3xl border-none outline-none'>{children}</button>
+    <button onClick={onClick} className='px-5 py-1.5 text-base text-white rounded-md border-none outline-none transition-all bg-[#112A4E] hover:bg-[#0d213e]'>{children}</button>
   )
 }
