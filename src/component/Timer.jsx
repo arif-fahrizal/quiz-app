@@ -10,24 +10,26 @@ export const Timer = () => {
         seconds: dataTime ? JSON.parse(dataTime).seconds : 0
     })
     const { minutes, seconds } = time
-    const {setOnTimeUp} = useContext(TimerContext)
+    const { onTimeUp, setOnTimeUp } = useContext(TimerContext)
 
     useEffect(() => {
         const timer = setInterval(() => {
-            seconds > 0 ? setTime(prev => ({ ...prev, seconds: prev.seconds - 1 })) :
-            minutes > 0 ? setTime(prev => ({ ...prev, minutes: prev.minutes - 1, seconds: 59 })) : 
-            clearInterval(timer)
+            if (seconds > 0) {
+                setTime(prev => ({ ...prev, seconds: prev.seconds - 1 }))
+            } else if (minutes > 0) {
+                setTime(prev => ({ ...prev, minutes: prev.minutes - 1, seconds: 59 }))
+            }
         }, 1000)
         
         localStorage.setItem('timer', JSON.stringify({ minutes, seconds }))
-        minutes === 0 && seconds === 0 && (setOnTimeUp(true), localStorage.removeItem('timer'))
+        minutes === 0 && seconds === 0 && (setOnTimeUp(!onTimeUp), localStorage.removeItem('timer'))
 
         return () => clearInterval(timer)
-    },[minutes, seconds, setOnTimeUp])
-    
+    },[minutes, seconds, onTimeUp, setOnTimeUp])
+
     return (
-    <h1 className='text-3xl font-semibold tracking-wide'>
-        {minutes < 10 ? `0${minutes}` : minutes} : {seconds < 10 ? `0${seconds}` : seconds}
+    <h1 className='text-lg sm:text-3xl font-semibold tracking-wide'>
+        {String(minutes).padStart(2, '0')} : {String(seconds).padStart(2, "0")}
     </h1>
     )
 }

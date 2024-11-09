@@ -2,22 +2,35 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { Timer } from '../component/Timer'
 import { Loading } from '../component/Loading'
 import { useNavigate } from 'react-router-dom'
-import { DataContext, TimerContext } from '../context/context'
+import { TimerContext } from '../context/context'
+import { useFetch } from '../services/useFetch'
 
 export const Quiz = () => {
-  const { data, isLoading } = useContext(DataContext)
+  const { data, loading, error } = useFetch()
   const { onTimeUp } = useContext(TimerContext)
+
+  const dataAccount = JSON.parse(localStorage.getItem('dataAccount')) || []
+  const isLogin = dataAccount.some(data => data.isLogin) || false
+
 
   const dataLocal = JSON.parse(localStorage.getItem('index'))
   const [index, setIndex] = useState(dataLocal ? dataLocal.index : 0)
-  const [questions, setQuestions] = useState(data[index])
+  const [questions, setQuestions] = useState()
   const [answers, setAnswers] = useState(dataLocal && dataLocal.index >= 1 ? dataLocal.answers : [])
   const [isComplete, setIsComplete] = useState(false)
 
   const navigate = useNavigate()
 
+  useEffect(() => {
+    !isLogin && navigate('/login')
+  }, [isLogin, navigate])
+
+  useEffect(() => {
+    !loading && setQuestions(data[index])
+  }, [data, index, loading])
+  
   const optionAnswer = useMemo(() => {
-    return [questions.correct_answer, ...questions.incorrect_answers].sort(() => Math.random() - .5)
+    return questions && [questions.correct_answer, ...questions.incorrect_answers].sort(() => Math.random() - .5)
   }, [questions])
 
   const handleAnswer = answer => {
@@ -26,35 +39,39 @@ export const Quiz = () => {
   }
 
   useEffect(() => {
-    localStorage.setItem('index', JSON.stringify({ index, answers }))
-    localStorage.setItem('questions', JSON.stringify(data))
-  }, [data, index, answers])
+    !loading && (localStorage.setItem('index', JSON.stringify({ index, answers })), localStorage.setItem('questions', JSON.stringify(data)))
+  }, [loading, data, index, answers])
 
   useEffect(() => {
     onTimeUp || isComplete ?
-      // (navigate('/score'),
-      (navigate('/trivia-app/score'),
+      (navigate('/score'),
       localStorage.removeItem('questions'), localStorage.removeItem('timer'), localStorage.setItem('index', JSON.stringify({ index: 0, answers }))) : null
   }, [onTimeUp, isComplete, answers, navigate])
 
+  if (loading) return <Loading />
+  if (error) return <p>Error: {error.message}</p>
+
   return (
     <>
-      {isLoading ? <Loading /> :
-        <section id="quiz" className='grid gap-5 w-full h-96 mt-16'>
-          <div id="question" className='w-full h-28 mx-auto text-center text-white rounded-lg bg-[#112A4E] bg-pattern bg-blend-multiply shadow lg:w-8/12'>
-            <span className='px-5 py-1 text-base text-white rounded-full bg-[#1D3557]'>Question {index + 1} of {data.length}</span>
-            <p className='mt-4 px-2 text-sm font-semibold sm:text-lg'>{questions.question}</p>
-          </div>
-          <ul id="answer" className='flex flex-wrap justify-center gap-4 w-full mx-auto text-center rounded-2xl sm:justify-between lg:w-8/12'>
-            {optionAnswer.map((option, index) => (
-              <li key={index} onClick={() => handleAnswer(option)} className='flex justify-center items-center w-full sm:w-60 lg:w-64 xl:w-80 py-3 text-sm font-medium text-white rounded-lg bg-[#112A4E] cursor-pointer hover:bg-[#0d213e]'>{option}</li>
-            ))}
-          </ul>
-          <section className='flex justify-center items-center gap-5 left-1/2 w-52 py-1.5 mx-auto mt-16 sm:mt-60 text-white rounded-full bg-[#112A4E]'>
-            <img src="./time.svg" alt="" className='w-10 h10' />
-            <Timer />
-          </section>
-        </section>}
+    {questions && 
+    <div className='container-layout'>
+      <section id="quiz" className='grid gap-5 w-full sm:mt-10'>
+        <div id="question" className='w-full h-28 mx-auto text-center text-white rounded-lg bg-[#112A4E] bg-pattern bg-blend-multiply shadow lg:w-9/12'>
+          <span className='px-5 py-1 text-base text-white rounded-full bg-[#1D3557]'>Question {index + 1} of {data.length}</span>
+          <p className='mt-4 px-2 text-sm font-semibold select-none sm:text-lg'>{questions.question}</p>
+        </div>
+        <ul id="answer" className='grid gap-4 w-full mx-auto text-center rounded-2xl sm:grid-cols-2 lg:w-9/12'>
+          {optionAnswer.map((option, index) => (
+            <li key={index} onClick={() => handleAnswer(option)} className='flex justify-center items-center w-full p-2 text-sm font-medium text-white rounded-lg bg-[#112A4E] cursor-pointer select-none hover:bg-[#0d213e]'>{option}</li>
+          ))}
+        </ul>
+        <section className='absolute left-1/2 bottom-3 transform -translate-x-1/2 flex justify-center items-center gap-5 w-52 py-1.5 text-white rounded-full bg-[#112A4E]'>
+          <img src="./time.svg" alt="" className='w-10 h10' />
+          <Timer />
+        </section>
+      </section>
+    </div>
+    }
     </>
   )
 }

@@ -2,33 +2,39 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Home } from './pages/home'
-import { LoginPage } from './pages/login'
 import { ScorePage } from './pages/score'
 import ContactPage from './pages/contact'
 import { DataProvider } from './context/context'
 import React from 'react'
+import { Quiz } from './pages/quiz'
+import { Loading } from './component/Loading'
+import { AuthPage } from './pages/authentication'
 
 
 const router = createBrowserRouter([
   {
-    // path:'/',
-    path:'/trivia-app/',
+    path:'/',
     element: <Home />
   },
   {
-    // path:'/login',
-    path:'/trivia-app/login',
-    element: <LoginPage />
+    path:'/login',
+    element: <AuthPage />
   },
   {
-    // path:'/score',
-    path:'/trivia-app/score',
+    path:'/score',
     element: <ScorePage />
   },
   {
-    // path:'/contact',
-    path:'/trivia-app/contact',
+    path:'/contact',
     element: <ContactPage />
+  },
+  {
+    path:'/quiz',
+    element: <Quiz />
+  },
+  {
+    path:'/loading',
+    element: <Loading />
   },
 ])
 

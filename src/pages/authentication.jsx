@@ -1,9 +1,10 @@
 import { Button } from '../component/Button'
-import { Input } from '../component/Input'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import RegisterLayout from '../layouts/RegisterLayout'
+import LoginLayout from '../layouts/LoginLayout'
 
-export const LoginPage = () => {
+export const AuthPage = () => {
   const [dataAccount, setDataAccount] = useState(localStorage.getItem('dataAccount') ? JSON.parse(localStorage.getItem('dataAccount')) : [
     {
       username: 'admin',
@@ -21,10 +22,7 @@ export const LoginPage = () => {
       data.username === getDataInput.username && data.password === getDataInput.password ? data.isLogin = true : data.isLogin = false
     })
     localStorage.setItem('dataAccount', JSON.stringify([...dataAccount]))
-    authLogin ? 
-    // navigate('/')
-    navigate('/trivia-app/')
-    : alert('Username atau Password salah!')
+    authLogin ? navigate('/') : alert('Username atau Password salah!')
     e.preventDefault()
   }
   const handleRegister = (e) => {
@@ -56,19 +54,19 @@ export const LoginPage = () => {
   }
   
   return (
-    <div className='flex justify-center items-center w-full h-screen bg-[#1d3557]'>
-      <div className='w-full h-screen bg-white overflow-hidden sm:w-[450px] sm:h-[650px] sm:rounded-2xl lg:flex lg:w-[900px] xl:w-[1150px]'>
-        <div className='w-full h-60 flex flex-col items-center justify-center text-white bg-[#00b4d8] rounded-b-[30%] lg:h-full lg:rounded-none'>
-          <img src="./logo.svg" alt="logo" className='w-40 h-40 lg:w-60 lg:h-60 xl:w-80 xl:h-80 object-contain'/>
+    <div className='container-layout p-0 bg-transparent border'>
+      <div className='flex flex-col justify-center items-center w-full h-full overflow-auto md:flex-row'>
+        <div className='flex flex-col justify-center items-center w-full h-fit pb-5 text-center text-white bg-[#00b4d8] bg-opacity-30 filter backdrop-blur md:h-full'>
+          <img src="./logo.svg" alt="logo" className='size-40 mx-auto md:size-60 xl:size-80 object-contain'/>
           <h1 className='text-2xl lg:text-3xl font-semibold'>Trivia App Mastery</h1>
-          <p className='hidden lg:block px-10 text-center'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt debitis quisquam illo! Laboriosam quaerat voluptas, repellat animi consectetur vel ipsum.</p>
+          <p className='hidden md:block px-3 text-center'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt debitis quisquam illo! Laboriosam quaerat voluptas, repellat animi consectetur vel ipsum.</p>
         </div>
-        <div className='w-full h-full lg:grid lg:place-items-center'>
-          <form onSubmit={(e) => isNew ? handleRegister(e) : handleLogin(e)} className='flex flex-col gap-5 w-[300px] h-full mx-auto py-3 sm:w-4/6 lg:h-3/5 lg:p-0 xl:justify-center'>
+        <div className='w-full h-full p-3 md:grid md:place-items-center text-white bg-white bg-opacity-30 filter backdrop-blur'>
+          <form onSubmit={(e) => isNew ? handleRegister(e) : handleLogin(e)} className='flex flex-col justify-center items-center gap-3 mx-auto mt-10 sm:w-5/6 md:h-full md:mt-0'>
             <h1 className='text-3xl font-semibold text-center'>{isNew ? 'Register' : 'Login'}</h1>
-            <Input onChange={handleChangeUsername} value={getDataInput && getDataInput.username} label="Username" type="text" placeholder="Enter your username"/>
-            <Input onChange={handleChangePassword} value={getDataInput && getDataInput.password} label="Password" type="password" placeholder="Enter your password"/>
-            {isNew && <Input onChange={handleConfirmPassword} label="Confirm Password" type="password" placeholder="Confirm your password"/>}
+            { isNew ? 
+            <RegisterLayout handleUsername={handleChangeUsername} handlePassword={handleChangePassword} confirmPassword={handleConfirmPassword} usernameValue={getDataInput.username} passwordValue={getDataInput.password} confirmValue={getDataInput.confirmPassword} /> : 
+            <LoginLayout handleUsername={handleChangeUsername} handlePassword={handleChangePassword} usernameValue={getDataInput.username} passwordValue={getDataInput.password} /> }
             <Button>{isNew ? 'Register' : 'Login'}</Button>
             <p className='text-center'>{ isNew ? 'Already have an account?' : 'Don\'t have an account?'} <span className='text-[#00b4d8] underline cursor-pointer' onClick={() => setIsNew(!isNew)}>{isNew ? 'Login' : 'Register'}</span></p>
           </form>
@@ -77,5 +75,3 @@ export const LoginPage = () => {
     </div>
   )
 }
-
-
