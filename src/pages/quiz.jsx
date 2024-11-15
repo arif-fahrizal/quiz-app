@@ -6,7 +6,7 @@ import { TimerContext } from '../context/context'
 import { useFetch } from '../services/useFetch'
 
 export const Quiz = () => {
-  const { data, loading, error } = useFetch()
+  const { dataQuestions, loading, error } = useFetch()
   const { onTimeUp } = useContext(TimerContext)
 
   const dataAccount = JSON.parse(localStorage.getItem('dataAccount')) || []
@@ -26,8 +26,8 @@ export const Quiz = () => {
   }, [isLogin, navigate])
 
   useEffect(() => {
-    !loading && setQuestions(data[index])
-  }, [data, index, loading])
+    !loading && setQuestions(dataQuestions[index])
+  }, [dataQuestions, index, loading])
   
   const optionAnswer = useMemo(() => {
     return questions && [questions.correct_answer, ...questions.incorrect_answers].sort(() => Math.random() - .5)
@@ -35,12 +35,12 @@ export const Quiz = () => {
 
   const handleAnswer = answer => {
     setAnswers(prev => [...prev, { selectedAnswer: answer, correctAnswer: questions.correct_answer }])
-    index < data.length - 1 ? (setIndex(index + 1), setQuestions(data[index + 1])) : setIsComplete(true)
+    index < dataQuestions.length - 1 ? (setIndex(index + 1), setQuestions(dataQuestions[index + 1])) : setIsComplete(true)
   }
 
   useEffect(() => {
-    !loading && (localStorage.setItem('index', JSON.stringify({ index, answers })), localStorage.setItem('questions', JSON.stringify(data)))
-  }, [loading, data, index, answers])
+    !loading && (localStorage.setItem('index', JSON.stringify({ index, answers })), localStorage.setItem('questions', JSON.stringify(dataQuestions)))
+  }, [loading, dataQuestions, index, answers])
 
   useEffect(() => {
     onTimeUp || isComplete ?
@@ -57,7 +57,7 @@ export const Quiz = () => {
     <div className='container-layout'>
       <section id="quiz" className='grid gap-5 w-full sm:mt-10'>
         <div id="question" className='w-full h-28 mx-auto text-center text-white rounded-lg bg-[#112A4E] bg-pattern bg-blend-multiply shadow lg:w-9/12'>
-          <span className='px-5 py-1 text-base text-white rounded-full bg-[#1D3557]'>Question {index + 1} of {data.length}</span>
+          <span className='px-5 py-1 text-base text-white rounded-full bg-[#1D3557]'>Question {index + 1} of {dataQuestions.length}</span>
           <p className='mt-4 px-2 text-sm font-semibold select-none sm:text-lg'>{questions.question}</p>
         </div>
         <ul id="answer" className='grid gap-4 w-full mx-auto text-center rounded-2xl sm:grid-cols-2 lg:w-9/12'>
