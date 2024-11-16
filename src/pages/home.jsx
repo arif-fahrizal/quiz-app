@@ -1,20 +1,16 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useContext, useState } from 'react'
 import { Button } from '../component/Button'
 import { useNavigate } from 'react-router-dom'
 import { ContainerLayout } from '../layouts/Container-layout'
-import { TimerContext } from '../context/context'
 
 export const Home = () => {
-  const { setOnTimeUp } = useContext(TimerContext)
-
-  const dataAccount = JSON.parse(localStorage.getItem('dataAccount')) || [{username: '', isLogin: false}]
-  const [{ username, isLogin }] = dataAccount.filter(data => data.isLogin === true).length > 0 ? dataAccount.filter(data => data.isLogin === true) : dataAccount
+  const dataAccount = JSON.parse(localStorage.getItem('dataAccount')) || [{ username: '', isLogin: false }]
+  const { username, isLogin } = dataAccount.find(data => data.isLogin === true)
   const navigate = useNavigate()
 
   const handleQuiz = (e) => {
-    isLogin ? navigate('/quiz') : navigate('/login')
+    navigate(isLogin ? '/quiz' : '/login')
     e.preventDefault()
   }
   

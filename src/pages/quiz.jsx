@@ -9,60 +9,93 @@ export const Quiz = () => {
   const { dataQuestions, loading, error } = useFetch()
   const { onTimeUp } = useContext(TimerContext)
 
-  const dataAccount = JSON.parse(localStorage.getItem('dataAccount')) || []
-  const isLogin = dataAccount.some(data => data.isLogin) || false
-
-
-  const dataLocal = JSON.parse(localStorage.getItem('index'))
-  const [index, setIndex] = useState(dataLocal ? dataLocal.index : 0)
-  const [questions, setQuestions] = useState()
-  const [answers, setAnswers] = useState(dataLocal && dataLocal.index >= 1 ? dataLocal.answers : [])
-  const [isComplete, setIsComplete] = useState(false)
-
   const navigate = useNavigate()
+  const getDataAccount = JSON.parse(localStorage.getItem('dataAccount')) || []
+  const isLogin = getDataAccount.some(data => data.isLogin) || false
 
+  const storedProgress = JSON.parse(localStorage.getItem('quizProgress')) || { currentQuestionIndex: 0, answers: [] }
+  const [quizState, setQuizState] = useState({
+    currentQuestionIndex: storedProgress.currentQuestionIndex,
+    selectedAnswers: storedProgress.answers > 0 ? storedProgress.answers : [],
+    currentQuestion: null,
+    isQuizComplete: false,
+  })
+  
+  const { currentQuestionIndex, selectedAnswers, currentQuestion, isQuizComplete } = quizState
+  
+  // Redirect if not logged in
   useEffect(() => {
     !isLogin && navigate('/login')
   }, [isLogin, navigate])
-
-  useEffect(() => {
-    !loading && setQuestions(dataQuestions[index])
-  }, [dataQuestions, index, loading])
   
-  const optionAnswer = useMemo(() => {
-    return questions && [questions.correct_answer, ...questions.incorrect_answers].sort(() => Math.random() - .5)
-  }, [questions])
+  // Update the current question
+  useEffect(() => {
+    if (!loading) {
+      setQuizState( prevState => ({
+        ...prevState,
+        currentQuestion: dataQuestions[currentQuestionIndex],
+      }))
+    }
+  }, [dataQuestions, currentQuestionIndex, loading])
+  
+  // Randomize the answer options
+  const shuffledAnswers = useMemo(() => {
+    return currentQuestion && [currentQuestion.correct_answer, ...currentQuestion.incorrect_answers].sort(() => Math.random() - 0.5)
+  }, [currentQuestion])
 
-  const handleAnswer = answer => {
-    setAnswers(prev => [...prev, { selectedAnswer: answer, correctAnswer: questions.correct_answer }])
-    index < dataQuestions.length - 1 ? (setIndex(index + 1), setQuestions(dataQuestions[index + 1])) : setIsComplete(true)
+  // Handle answer selection
+  const handleAnswerSelection = (answer) => {
+    const updatedAnswers = [...selectedAnswers, { selectedAnswer: answer, correctAnswer: currentQuestion.correct_answer }]
+
+    if (currentQuestionIndex < dataQuestions.length - 1) {
+      setQuizState({
+        ...quizState,
+        currentQuestionIndex: currentQuestionIndex + 1,
+        currentQuestion: dataQuestions[currentQuestionIndex + 1],
+        selectedAnswers: updatedAnswers,
+      })
+    } else {
+      setQuizState({
+        ...quizState,
+        isQuizComplete: true,
+        selectedAnswers: updatedAnswers,
+      })
+    }
   }
 
+  // Save progress to localStorage
   useEffect(() => {
-    !loading && (localStorage.setItem('index', JSON.stringify({ index, answers })), localStorage.setItem('questions', JSON.stringify(dataQuestions)))
-  }, [loading, dataQuestions, index, answers])
+    if (!loading) {
+      localStorage.setItem("quizProgress", JSON.stringify({ currentQuestionIndex, answers: selectedAnswers }))
+      localStorage.setItem("questions", JSON.stringify(dataQuestions))
+    }
+  }, [loading, currentQuestionIndex, selectedAnswers, dataQuestions])
 
-  useEffect(() => {
-    onTimeUp || isComplete ?
-      (navigate('/score'),
-      localStorage.removeItem('questions'), localStorage.removeItem('timer'), localStorage.setItem('index', JSON.stringify({ index: 0, answers }))) : null
-  }, [onTimeUp, isComplete, answers, navigate])
+   // Handle timer expiration or quiz completion
+   useEffect(() => {
+    if (onTimeUp || isQuizComplete) {
+      navigate("/score")
+      localStorage.removeItem("questions")
+      localStorage.removeItem("timer")
+      localStorage.setItem("quizProgress", JSON.stringify({ currentQuestionIndex: 0, answers: selectedAnswers }))
+    }
+  }, [onTimeUp, selectedAnswers, isQuizComplete, navigate])
 
   if (loading) return <Loading />
   if (error) return <p>Error: {error.message}</p>
 
   return (
     <>
-    {questions && 
+    {currentQuestion && 
     <div className='container-layout'>
       <section id="quiz" className='grid gap-5 w-full sm:mt-10'>
         <div id="question" className='w-full h-28 mx-auto text-center text-white rounded-lg bg-[#112A4E] bg-pattern bg-blend-multiply shadow lg:w-9/12'>
-          <span className='px-5 py-1 text-base text-white rounded-full bg-[#1D3557]'>Question {index + 1} of {dataQuestions.length}</span>
-          <p className='mt-4 px-2 text-sm font-semibold select-none sm:text-lg'>{questions.question}</p>
+          <span className='px-5 py-1 text-base text-white rounded-full bg-[#1D3557]'>Question {currentQuestionIndex + 1} of {dataQuestions.length}</span>
+          <p className='mt-4 px-2 text-sm font-semibold select-none sm:text-lg'>{currentQuestion.question}</p>
         </div>
         <ul id="answer" className='grid gap-4 w-full mx-auto text-center rounded-2xl sm:grid-cols-2 lg:w-9/12'>
-          {optionAnswer.map((option, index) => (
-            <li key={index} onClick={() => handleAnswer(option)} className='flex justify-center items-center w-full p-2 text-sm font-medium text-white rounded-lg bg-[#112A4E] cursor-pointer select-none hover:bg-[#0d213e]'>{option}</li>
+          {shuffledAnswers.map((option, index) => (
+            <li key={index} onClick={() => handleAnswerSelection(option)} className='flex justify-center items-center w-full p-2 text-sm font-medium text-white rounded-lg bg-[#112A4E] cursor-pointer select-none hover:bg-[#0d213e]'>{option}</li>
           ))}
         </ul>
         <section className='absolute left-1/2 bottom-3 transform -translate-x-1/2 flex justify-center items-center gap-5 w-52 py-1.5 text-white rounded-full bg-[#112A4E]'>

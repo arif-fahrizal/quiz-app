@@ -8,7 +8,8 @@ import { DataProvider } from './context/context'
 import React from 'react'
 import { Quiz } from './pages/quiz'
 import { Loading } from './component/Loading'
-import { AuthPage } from './pages/authentication'
+import LoginPage from './pages/login'
+import RegisterPage from './pages/register'
 
 
 const router = createBrowserRouter([
@@ -18,7 +19,11 @@ const router = createBrowserRouter([
   },
   {
     path:'/login',
-    element: <AuthPage />
+    element: <LoginPage />
+  },
+  {
+    path:'/register',
+    element: <RegisterPage />
   },
   {
     path:'/score',

@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import { createContext, useState } from 'react';
+import { createContext, useState } from 'react'
 
 // Membuat context baru
-export const TimerContext = createContext();
+export const TimerContext = createContext()
 
 export const DataProvider = ({ children }) => {
   const [onTimeUp, setOnTimeUp] = useState(false)
