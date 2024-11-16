@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { ContainerLayout } from '../layouts/Container-layout'
 
 export const Home = () => {
-  const dataAccount = JSON.parse(localStorage.getItem('dataAccount')) || [{ username: '', isLogin: false }]
-  const { username, isLogin } = dataAccount.find(data => data.isLogin === true)
+  const dataAccount = JSON.parse(localStorage.getItem('dataAccount'))
+  const { username = '', isLogin = false } = dataAccount.find(data => data.isLogin === true) || {}
   const navigate = useNavigate()
 
   const handleQuiz = (e) => {
