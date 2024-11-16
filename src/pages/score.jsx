@@ -18,7 +18,7 @@ export const ScorePage = () => {
   const getScoreClass = (score, thresholds) => {
     if (score >= thresholds[0]) return 'bg-green-400'
     if (score >= thresholds[1]) return 'bg-orange-400'
-    return 'bg-red-700 text-red-700'
+    return 'bg-red-700'
   }
 
 
@@ -34,7 +34,7 @@ export const ScorePage = () => {
           </div>
           <div className="flex justify-between w-full">
             <span className="text-lg font-medium">Wrong Answer</span>
-            <span className={`w-7 text-lg text-center text-white font-semibold rounded-md ${incorrectAnswer <= 2 ? 'bg-green-700' : incorrectAnswer <= 4 ? 'bg-orange-400' : 'bg-red-700'}`}> {incorrectAnswer || 0} </span>
+            <span className={`w-7 text-lg text-center text-white font-semibold rounded-md ${incorrectAnswer <= 2 ? 'bg-green-400' : incorrectAnswer <= 4 ? 'bg-orange-400' : 'bg-red-700'}`}> {incorrectAnswer || 0} </span>
           </div>
           <div className="flex justify-between w-full">
             <span className="text-lg font-medium">Answer Submitted</span>
